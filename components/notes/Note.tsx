@@ -1,60 +1,84 @@
 import {
+  Box,
   Card,
   CardActions,
   CardContent,
   CardHeader,
+  Chip,
   Grid,
   Typography,
 } from "@mui/material";
 import React, { FC } from "react";
 
+import Map from "../Map";
 import { Note as NoteType } from "../../api/note";
-import { Stack } from "@mui/system";
-import ThermostatIcon from "@mui/icons-material/Thermostat";
+import { fishingMethodOptions } from "../../options/note";
+import moment from "moment";
 
 type Props = {
   note: NoteType;
 };
 
 const Note: FC<Props> = ({ note }) => {
+  const getFishingMethodLabel = (fishingMethod: NoteType["fishingMethod"]) => {
+    if (Number(fishingMethod)) {
+      return (
+        fishingMethodOptions.find((option) => option?.id === fishingMethod)
+          ?.label ?? ""
+      );
+    } else {
+      return fishingMethod;
+    }
+  };
+
   return (
-    <Card key={note.id} sx={{ minWidth: 250 }}>
-      <CardHeader title={note.user} subheader={note.note} />
+    <Card key={note.id} sx={{ width: "100%", maxWidth: 500 }}>
+      <CardHeader
+        title={note.user}
+        subheader={note.note}
+        action={<Chip label={moment(note.endTime).fromNow()} />}
+      />
       <CardContent>
-        <Grid display="grid" gridTemplateColumns="1fr 1fr" gap={1}>
-          <Typography>Start time:</Typography>
-          <Typography> {note.startTime}</Typography>
-          <Typography>End time:</Typography>
-          <Typography> {note.endTime}</Typography>
-          <Typography>Location</Typography>
+        <Grid display="grid" gridTemplateColumns="1fr 1fr">
+          <Typography>Duration</Typography>
           <Typography>
-            {note.coordinates.latitude} {note.coordinates.longitude}
+            {moment
+              .duration(moment(note.endTime).diff(note.startTime))
+              .humanize()}
           </Typography>
           <Typography>Fishing Method</Typography>
-          <Typography>{note.fishingMethod}</Typography>
-          <Typography>Bait</Typography>
-          <Typography>{note.bait}</Typography>
+          <Typography>{getFishingMethodLabel(note.fishingMethod)}</Typography>
+          {note.bait && (
+            <>
+              <Typography>Bait</Typography>
+              <Typography>{note.bait}</Typography>
+            </>
+          )}
         </Grid>
 
         {note.temp && (
-          <>
-            <Stack justifyContent="flex-start" sx={{ mt: 2 }}>
-              <ThermostatIcon color="primary" />
+          <Box sx={{ mt: 2 }}>
+            <Grid display="grid" gridTemplateColumns="1fr 1fr">
               <Typography fontWeight={700}>Weather:</Typography>
-            </Stack>
-            <Grid display="grid" gridTemplateColumns="1fr 1fr" gap={1}>
+              <Typography fontWeight={700}>{note.conditionText}</Typography>
               <Typography>Temperature</Typography>
-              <Typography> {note.temp}</Typography>
-              <Typography>windKph:</Typography>
-              <Typography> {note.windKph}</Typography>
-              <Typography>windDir</Typography>
+              <Typography> {`${note.temp}°C`}</Typography>
+              <Typography>Wind speed</Typography>
+              <Typography> {`${note.windKph} km/h`}</Typography>
+              <Typography>Wind direction</Typography>
               <Typography>{note.windDir}</Typography>
-              <Typography>cloudPct</Typography>
+              <Typography>Cloudiness</Typography>
               <Typography>{note.cloudPct}</Typography>
-              <Typography>conditionText</Typography>
-              <Typography>{note.conditionText}</Typography>
             </Grid>
-          </>
+          </Box>
+        )}
+
+        {note.coordinates.latitude && note.coordinates.longitude && (
+          <Box sx={{ mt: 2 }}>
+            <Map
+              position={[note.coordinates.latitude, note.coordinates.longitude]}
+            />
+          </Box>
         )}
       </CardContent>
       <CardActions></CardActions>

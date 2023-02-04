@@ -8,7 +8,7 @@ export type Note = {
   fishingDate: string;
   startTime: string;
   endTime: string;
-  coordinates: { latitude: number; longitude: number };
+  coordinates: Coordinates;
   waterBody: string;
   fishingMethod: FishingMethod;
   fishCount: number;
@@ -20,6 +20,8 @@ export type Note = {
   cloudPct: string;
   conditionText: string;
 };
+
+export type Coordinates = { latitude: number; longitude: number };
 
 export enum FishingMethod {
   None = "",
