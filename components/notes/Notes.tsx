@@ -1,26 +1,37 @@
 import { Button, LinearProgress, Stack } from "@mui/material";
 
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { FC } from "react";
 import Note from "./Note";
 import React from "react";
 import { getNotes } from "../../api/note";
+import useMessage from "../../hooks/useMessage";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 const Notes: FC = () => {
-  const { isLoading, data: notes } = useQuery(["notes"], getNotes);
+  const { showError } = useMessage();
+  const { isLoading, data: notes } = useQuery({
+    queryKey: ["notes"],
+    queryFn: getNotes,
+    onError: () => {
+      showError("Failed to load");
+    },
+  });
   const navigate = useNavigate();
 
   return (
     <>
-      <Stack justifyContent="center" alignItems="flex-end" sx={{ mb: 2 }}>
+      <Stack sx={{ mb: 2 }}>
         <Button
           variant="contained"
+          size="large"
+          startIcon={<AddCircleIcon />}
           onClick={() => {
             navigate("/new");
           }}
         >
-          Add new
+          Create
         </Button>
       </Stack>
       {isLoading ? (

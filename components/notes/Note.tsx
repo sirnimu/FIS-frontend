@@ -9,9 +9,12 @@ import {
   Typography,
 } from "@mui/material";
 import React, { FC } from "react";
+import { green, red } from "@mui/material/colors";
 
+import CloseIcon from "@mui/icons-material/Close";
 import Map from "../Map";
 import { Note as NoteType } from "../../api/note";
+import SetMealIcon from "@mui/icons-material/SetMeal";
 import { fishingMethodOptions } from "../../options/note";
 import moment from "moment";
 
@@ -40,6 +43,16 @@ const Note: FC<Props> = ({ note }) => {
       />
       <CardContent>
         <Grid display="grid" gridTemplateColumns="1fr 1fr">
+          <Typography>Fish</Typography>
+          <Typography>
+            {note.fishCount > 0 ? (
+              Array(note.fishCount)
+                .fill(null)
+                .map(() => <SetMealIcon sx={{ color: green[500] }} />)
+            ) : (
+              <CloseIcon sx={{ color: red[500] }} />
+            )}
+          </Typography>
           <Typography>Duration</Typography>
           <Typography>
             {moment

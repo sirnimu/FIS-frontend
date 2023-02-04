@@ -14,6 +14,7 @@ import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import React, { FC } from "react";
 
 import { DateTimePicker } from "@mui/x-date-pickers";
+import { Marker } from "react-leaflet";
 import { Stack } from "@mui/system";
 import { createNote } from "../../../api/note";
 import { fishingMethodOptions } from "../../../options/note";
@@ -116,7 +117,10 @@ const NoteForm: FC = () => {
         />
         <Box sx={{ width: "100%", my: 2 }}>
           <MapContainer
-            center={[54.6872, 25.2797]}
+            center={[
+              formik.values.coordinates.latitude,
+              formik.values.coordinates.longitude,
+            ]}
             zoom={10}
             style={{ height: 250, width: "100%" }}
           >
@@ -125,6 +129,12 @@ const NoteForm: FC = () => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <MapEvents />
+            <Marker
+              position={[
+                formik.values.coordinates.latitude,
+                formik.values.coordinates.longitude,
+              ]}
+            />
           </MapContainer>
           <Grid
             display="grid"
