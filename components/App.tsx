@@ -1,21 +1,16 @@
 import { FC } from "react";
-import { Typography, CssBaseline, Container } from "@mui/material";
-import { AppToolbar, Toolbar } from "./AppToolbar";
+import { CssBaseline } from "@mui/material";
 import ThemeProvider from "../contexts/ThemeProvider";
+import QueryProvider from "../contexts/QueryProvider";
+import Main from "./Main";
 
 export const App: FC = () => {
   return (
-    <ThemeProvider>
-      <CssBaseline />
-
-      <AppToolbar />
-      <Toolbar />
-
-      <Container sx={{ my: 4 }}>
-        <Typography sx={{ mb: 2 }} variant="body2">
-          Notes goes here...
-        </Typography>
-      </Container>
-    </ThemeProvider>
+    <QueryProvider>
+      <ThemeProvider>
+        <CssBaseline />
+        <Main />
+      </ThemeProvider>
+    </QueryProvider>
   );
 };
