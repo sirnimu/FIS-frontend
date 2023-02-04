@@ -1,6 +1,7 @@
 import {
   AppBar,
   Box,
+  Button,
   Container,
   IconButton,
   Stack,
@@ -9,6 +10,7 @@ import {
 } from "@mui/material";
 import { FC, ReactNode } from "react";
 
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link } from "react-router-dom";
 import React from "react";
@@ -27,11 +29,18 @@ const Page: FC<Props> = ({ children }) => {
         <Toolbar>
           <Stack justifyContent="space-between" sx={{ width: "100%" }}>
             <Typography variant="h5">Fishing notes</Typography>
-            <Link to="/">
-              <IconButton sx={{ color: "white" }}>
-                <HomeIcon />
-              </IconButton>
-            </Link>
+            <Stack>
+              <Link to="/">
+                <IconButton sx={{ color: "white" }}>
+                  <HomeIcon />
+                </IconButton>
+              </Link>
+              <Link to="/user">
+                <IconButton sx={{ color: "white" }}>
+                  <GroupAddIcon />
+                </IconButton>
+              </Link>
+            </Stack>
           </Stack>
         </Toolbar>
       </AppBar>

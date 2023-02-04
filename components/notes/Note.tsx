@@ -15,6 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Map from "../Map";
 import { Note as NoteType } from "../../api/note";
 import SetMealIcon from "@mui/icons-material/SetMeal";
+import { User } from "../../api/user";
 import { fishingMethodOptions } from "../../options/note";
 import moment from "moment";
 
@@ -81,7 +82,7 @@ const Note: FC<Props> = ({ note }) => {
               <Typography>Wind direction</Typography>
               <Typography>{note.windDir}</Typography>
               <Typography>Cloudiness</Typography>
-              <Typography>{note.cloudPct}</Typography>
+              <Typography>{`${note.cloudPct}%`}</Typography>
             </Grid>
           </Box>
         )}

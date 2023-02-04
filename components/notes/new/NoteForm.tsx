@@ -12,15 +12,16 @@ import {
 } from "@mui/material";
 import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import React, { FC } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { Marker } from "react-leaflet";
 import { Stack } from "@mui/system";
 import { createNote } from "../../../api/note";
 import { fishingMethodOptions } from "../../../options/note";
+import { getUsers } from "../../../api/user";
 import { useFormik } from "formik";
 import useMessage from "../../../hooks/useMessage";
-import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 const NoteForm: FC = () => {
@@ -37,15 +38,24 @@ const NoteForm: FC = () => {
     onError: () => {
       showError("Failed to create fishing note");
     },
-    onSuccess: (data, variables, context) => {
-      showMessage("Fishing app created");
+    onSuccess: () => {
+      navigate("/");
+      showMessage("Fishing note created");
+    },
+  });
+
+  const { data: users } = useQuery({
+    queryKey: ["users"],
+    queryFn: getUsers,
+    onError: () => {
+      showError("Failed to load");
     },
   });
 
   const submitForm = async (values: any) => {
     {
       const body = {
-        user: "test",
+        user: values.user,
         startTime: values.startTime,
         endTime: values.endTime,
         coordinates: values.coordinates,
@@ -56,12 +66,12 @@ const NoteForm: FC = () => {
         note: values.description,
       };
       addNote(body);
-      navigate(-1);
     }
   };
 
   const formik = useFormik({
     initialValues: {
+      user: "",
       startTime: null,
       endTime: null,
       coordinates: { latitude: 54.6872, longitude: 25.2797 },
@@ -92,6 +102,25 @@ const NoteForm: FC = () => {
         <Typography variant="h5" sx={{ p: 1 }}>
           Create new fishing
         </Typography>
+
+        <TextField
+          id="user"
+          label="User"
+          value={formik.values.user}
+          onChange={(e) => {
+            formik.setFieldValue("user", e.target.value);
+          }}
+          select
+          required
+          {...fieldProps}
+        >
+          {users &&
+            users.map((user) => (
+              <MenuItem key={user} value={user}>
+                {user}
+              </MenuItem>
+            ))}
+        </TextField>
 
         <DateTimePicker
           label="Started"

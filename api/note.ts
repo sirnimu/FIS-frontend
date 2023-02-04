@@ -1,5 +1,3 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-
 import axios from "./axios";
 
 export type Note = {

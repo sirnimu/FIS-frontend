@@ -2,6 +2,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import CreateNote from "../routes/CreateNote";
+import CreateUser from "../routes/CreateUser";
 import { CssBaseline } from "@mui/material";
 import { FC } from "react";
 import Home from "../routes/Home";
@@ -20,6 +21,10 @@ export const App: FC = () => {
     {
       path: "/new",
       element: <CreateNote />,
+    },
+    {
+      path: "/user",
+      element: <CreateUser />,
     },
   ]);
 

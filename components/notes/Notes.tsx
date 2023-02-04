@@ -5,6 +5,7 @@ import { FC } from "react";
 import Note from "./Note";
 import React from "react";
 import { getNotes } from "../../api/note";
+import { getUsers } from "../../api/user";
 import useMessage from "../../hooks/useMessage";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -18,6 +19,7 @@ const Notes: FC = () => {
       showError("Failed to load");
     },
   });
+
   const navigate = useNavigate();
 
   return (
