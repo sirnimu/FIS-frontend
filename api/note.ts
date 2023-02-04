@@ -1,16 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-type Note = {
+import axios from "./axios";
+
+export type Note = {
   id: number;
   user: string;
   fishingDate: string;
   startTime: string;
   endTime: string;
-  coordinates: any;
+  coordinates: { latitude: number; longitude: number };
   waterBody: string;
-  fishingMethod: any;
-  fishCount: string;
+  fishingMethod: FishingMethod;
+  fishCount: number;
   bait: string;
   note: string;
   temp: string;
@@ -20,10 +21,17 @@ type Note = {
   conditionText: string;
 };
 
-export const getNotes = () => {
-  return useQuery(["notes"], async (): Promise<Note[]> => {
-    return axios
-      .get("http://sheikasop-001-site1.atempurl.com/api/note")
-      .then((res) => res.data);
-  });
+export enum FishingMethod {
+  None = "",
+  Spinning = 1,
+  Float,
+  Bottom,
+}
+
+export const getNotes = async (): Promise<Note[]> => {
+  return axios.get("/note").then((res) => res.data);
+};
+
+export const createNote = async (newNote: Partial<Note>): Promise<Note[]> => {
+  return axios.post("/note", newNote);
 };

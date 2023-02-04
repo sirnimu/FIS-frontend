@@ -1,9 +1,7 @@
-/* SPDX-FileCopyrightText: 2021 @koistya */
-/* SPDX-License-Identifier: MIT */
-
 import * as React from "react";
-import { createRoot } from "react-dom/client";
+
 import { App } from "./components/App";
+import { createRoot } from "react-dom/client";
 
 const root = createRoot(document.getElementById("root") as HTMLElement);
 

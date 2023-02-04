@@ -1,24 +1,36 @@
-import { LinearProgress, Typography } from "@mui/material";
+import { Button, Grid, LinearProgress, Stack } from "@mui/material";
+import { FC, useState } from "react";
+import { MapContainer, TileLayer } from "react-leaflet";
 
-import { FC } from "react";
+import AddNoteDialog from "./AddNoteDialog";
+import Note from "./Note";
+import React from "react";
 import { getNotes } from "../../api/note";
+import { useQuery } from "@tanstack/react-query";
 
 const Notes: FC = () => {
-  const { isLoading, data } = getNotes();
+  const [isAddNoteOpen, setIsAddNoteOpen] = useState(false);
 
-  console.log(data);
-  if (isLoading) {
-    return <LinearProgress />;
-  }
+  const { isLoading, data: notes } = useQuery(["notes"], getNotes);
 
   return (
-    <main>
-      {typeof data}
-      {data?.length}
-      {data?.map((note) => (
-        <Typography>{note.id}</Typography>
-      ))}
-    </main>
+    <>
+      <Stack justifyContent="center" alignItems="flex-end" sx={{ mb: 2 }}>
+        <Button variant="contained" onClick={() => setIsAddNoteOpen(true)}>
+          Add new
+        </Button>
+      </Stack>
+      {isLoading ? (
+        <LinearProgress />
+      ) : (
+        <Grid display="grid" gap={2}>
+          {notes?.map((note) => (
+            <Note key={note.id} note={note} />
+          ))}
+        </Grid>
+      )}
+      <AddNoteDialog open={isAddNoteOpen} setOpen={setIsAddNoteOpen} />
+    </>
   );
 };
 
