@@ -38,7 +38,7 @@ const Note: FC<Props> = ({ note }) => {
     <Card key={note.id} sx={{ width: "100%", maxWidth: 500 }}>
       <CardHeader
         title={note.user}
-        subheader={note.note}
+        subheader={note.description}
         action={<Chip label={moment(note.endTime).fromNow()} />}
       />
       <CardContent>
