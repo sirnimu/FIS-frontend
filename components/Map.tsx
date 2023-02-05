@@ -13,7 +13,7 @@ const Map: FC<Props> = ({ position }) => {
   return (
     <MapContainer
       center={position}
-      zoom={10}
+      zoom={13}
       style={{ height: 250, width: "100%" }}
     >
       <TileLayer

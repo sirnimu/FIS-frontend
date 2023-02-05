@@ -1,4 +1,4 @@
-import NoteForm from "../components/notes/new/NoteForm";
+import NoteForm from "../components/notes/NoteForm";
 import Notes from "../components/notes/Notes";
 import Page from "../components/ui/Page";
 import React from "react";

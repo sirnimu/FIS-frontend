@@ -42,7 +42,7 @@ const Page: FC<Props> = ({ children }) => {
                     color: "white",
                   }}
                 >
-                  Fishing notes
+                  Fishingis
                 </Typography>
               </Stack>
             </Link>

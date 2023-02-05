@@ -1,57 +1,61 @@
 import "leaflet/dist/leaflet.css";
 
 import {
+  Box,
   Button,
-  Dialog,
+  Container,
   Grid,
   MenuItem,
   TextField,
   TextFieldProps,
   Typography,
 } from "@mui/material";
-import { DatePicker, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
 import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
+import React, { FC } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { Marker } from "react-leaflet";
 import { Stack } from "@mui/system";
 import { createNote } from "../../api/note";
 import { fishingMethodOptions } from "../../options/note";
-import moment from "moment";
+import { getUsers } from "../../api/user";
 import { useFormik } from "formik";
 import useMessage from "../../hooks/useMessage";
-import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
-type Props = {
-  open: boolean;
-  setOpen: Dispatch<SetStateAction<Props["open"]>>;
-};
-
-const AddNoteDialog: FC<Props> = ({ open, setOpen }) => {
+const NoteForm: FC = () => {
   const fieldProps: TextFieldProps = {
     fullWidth: true,
     margin: "dense",
   };
 
   const { showError, showMessage } = useMessage();
+  const navigate = useNavigate();
 
   const { mutate: addNote } = useMutation({
     mutationFn: createNote,
     onError: () => {
       showError("Failed to create fishing note");
     },
-    onSuccess: (data, variables, context) => {
-      showMessage("Fishing app created");
+    onSuccess: () => {
+      navigate("/");
+      showMessage("Fishing note created");
     },
   });
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const { data: users } = useQuery({
+    queryKey: ["users"],
+    queryFn: getUsers,
+    onError: () => {
+      showError("Failed to load");
+    },
+  });
 
   const submitForm = async (values: any) => {
     {
       const body = {
-        user: "test",
+        user: values.user,
         startTime: values.startTime,
         endTime: values.endTime,
         coordinates: values.coordinates,
@@ -62,13 +66,12 @@ const AddNoteDialog: FC<Props> = ({ open, setOpen }) => {
         note: values.description,
       };
       addNote(body);
-
-      handleClose();
     }
   };
 
   const formik = useFormik({
     initialValues: {
+      user: "",
       startTime: null,
       endTime: null,
       coordinates: { latitude: 54.6872, longitude: 25.2797 },
@@ -94,66 +97,94 @@ const AddNoteDialog: FC<Props> = ({ open, setOpen }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-      <Stack direction="column" sx={{ py: 2, px: 4 }}>
+    <Container maxWidth="sm">
+      <Stack direction="column">
         <Typography variant="h5" sx={{ p: 1 }}>
           Create new fishing
         </Typography>
-        <Grid
-          display="grid"
-          gridTemplateColumns="1fr 1fr"
-          gap={2}
-          sx={{ width: "100%" }}
-        >
-          <DateTimePicker
-            ampm={false}
-            value={formik.values.startTime}
-            onChange={(newValue) => {
-              formik.setFieldValue("startTime", newValue);
-            }}
-            renderInput={(params) => (
-              <TextField
-                id="startTime"
-                label="Fishing start time"
-                required
-                {...fieldProps}
-                {...params}
-              />
-            )}
-          />
-          <DateTimePicker
-            ampm={false}
-            value={formik.values.endTime}
-            onChange={(newValue) => {
-              formik.setFieldValue("endTime", newValue);
-            }}
-            renderInput={(params) => (
-              <TextField
-                id="endTime"
-                label="Fishing end time"
-                required
-                {...fieldProps}
-                {...params}
-              />
-            )}
-          />
-        </Grid>
 
-        <MapContainer
-          center={[
-            formik.values.coordinates.latitude,
-            formik.values.coordinates.longitude,
-          ]}
-          zoom={12}
-          style={{ height: 250, width: "100%" }}
+        <TextField
+          id="user"
+          label="User"
+          value={formik.values.user}
+          onChange={(e) => {
+            formik.setFieldValue("user", e.target.value);
+          }}
+          select
+          required
+          {...fieldProps}
         >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <MapEvents />
-        </MapContainer>
-        <Typography>{`Latitude: ${formik.values.coordinates.latitude}, Longitude: ${formik.values.coordinates.longitude}`}</Typography>
+          {users &&
+            users.map((user) => (
+              <MenuItem key={user} value={user}>
+                {user}
+              </MenuItem>
+            ))}
+        </TextField>
+
+        <DateTimePicker
+          label="Started"
+          ampm={false}
+          value={formik.values.startTime}
+          onChange={(newValue) => {
+            formik.setFieldValue("startTime", newValue);
+          }}
+          renderInput={(params) => (
+            <TextField id="startTime" required {...fieldProps} {...params} />
+          )}
+        />
+        <DateTimePicker
+          label="Finished"
+          ampm={false}
+          value={formik.values.endTime}
+          onChange={(newValue) => {
+            formik.setFieldValue("endTime", newValue);
+          }}
+          renderInput={(params) => (
+            <TextField id="endTime" required {...fieldProps} {...params} />
+          )}
+        />
+        <Box sx={{ width: "100%", my: 2 }}>
+          <MapContainer
+            center={[
+              formik.values.coordinates.latitude,
+              formik.values.coordinates.longitude,
+            ]}
+            zoom={10}
+            style={{ height: 250, width: "100%" }}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <MapEvents />
+            <Marker
+              position={[
+                formik.values.coordinates.latitude,
+                formik.values.coordinates.longitude,
+              ]}
+            />
+          </MapContainer>
+          <Grid
+            display="grid"
+            gridTemplateColumns="1fr 1fr"
+            gap={2}
+            sx={{ width: "100%", mt: 2 }}
+          >
+            <TextField
+              label="Latitude"
+              value={formik.values.coordinates.latitude}
+              disabled
+              {...fieldProps}
+            />
+            <TextField
+              label="Longitude"
+              value={formik.values.coordinates.longitude}
+              disabled
+              {...fieldProps}
+            />
+          </Grid>
+        </Box>
         <TextField
           id="waterBody"
           label="Water body"
@@ -202,6 +233,7 @@ const AddNoteDialog: FC<Props> = ({ open, setOpen }) => {
           label="Description"
           value={formik.values.description}
           onChange={formik.handleChange}
+          multiline
           {...fieldProps}
         />
         <Stack
@@ -210,16 +242,13 @@ const AddNoteDialog: FC<Props> = ({ open, setOpen }) => {
           spacing={2}
           sx={{ width: "100%", py: 4 }}
         >
-          <Button autoFocus onClick={handleClose}>
-            Cancel
-          </Button>
           <Button variant="contained" onClick={() => formik.handleSubmit()}>
             Save
           </Button>
         </Stack>
       </Stack>
-    </Dialog>
+    </Container>
   );
 };
 
-export default AddNoteDialog;
+export default NoteForm;

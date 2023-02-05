@@ -15,7 +15,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import Map from "../Map";
 import { Note as NoteType } from "../../api/note";
 import SetMealIcon from "@mui/icons-material/SetMeal";
-import { User } from "../../api/user";
 import { fishingMethodOptions } from "../../options/note";
 import moment from "moment";
 
@@ -44,7 +43,7 @@ const Note: FC<Props> = ({ note }) => {
       />
       <CardContent>
         <Grid display="grid" gridTemplateColumns="1fr 1fr">
-          <Typography>Fish</Typography>
+          <Typography>Fishes caught</Typography>
           <Typography>
             {note.fishCount > 0 ? (
               Array(note.fishCount)
