@@ -1,4 +1,5 @@
 import "leaflet/dist/leaflet.css";
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css"; // Re-uses images from ~leaflet package
 
 import {
   Button,
@@ -9,14 +10,13 @@ import {
   TextFieldProps,
   Typography,
 } from "@mui/material";
-import { DatePicker, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
 import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
+import React, { Dispatch, FC, SetStateAction } from "react";
 
+import { DateTimePicker } from "@mui/x-date-pickers";
 import { Stack } from "@mui/system";
 import { createNote } from "../../api/note";
 import { fishingMethodOptions } from "../../options/note";
-import moment from "moment";
 import { useFormik } from "formik";
 import useMessage from "../../hooks/useMessage";
 import { useMutation } from "@tanstack/react-query";
@@ -39,7 +39,7 @@ const AddNoteDialog: FC<Props> = ({ open, setOpen }) => {
     onError: () => {
       showError("Failed to create fishing note");
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: () => {
       showMessage("Fishing app created");
     },
   });

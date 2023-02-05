@@ -1,4 +1,5 @@
 import "leaflet/dist/leaflet.css";
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import React, { FC } from "react";
