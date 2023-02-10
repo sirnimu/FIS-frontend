@@ -13,4 +13,12 @@ export const fishingMethodOptions = [
     id: FishingMethod.Spinning,
     label: "Spinning",
   },
+  {
+    id: FishingMethod.IceFishing,
+    label: "Ice Fishing",
+  },
+  {
+    id: FishingMethod.Other,
+    label: "Other",
+  },
 ];

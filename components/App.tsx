@@ -1,30 +1,43 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import CreateNote from "../routes/CreateNote";
-import CreateUser from "../routes/CreateUser";
 import { CssBaseline } from "@mui/material";
 import { FC } from "react";
-import Home from "../routes/Home";
 import { LocalizationProvider } from "@mui/x-date-pickers";
+import NoteForm from "./notes/NoteForm";
+import Notes from "./notes/Notes";
+import Page from "./ui/Page";
 import QueryProvider from "../contexts/QueryProvider";
 import React from "react";
 import { SnackbarProvider } from "notistack";
 import ThemeProvider from "../contexts/ThemeProvider";
+import UserForm from "./user/UserForm";
 
 export const App: FC = () => {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Home />,
+      element: (
+        <Page>
+          <Notes />
+        </Page>
+      ),
     },
     {
-      path: "/new",
-      element: <CreateNote />,
+      path: "/note",
+      element: (
+        <Page>
+          <NoteForm />
+        </Page>
+      ),
     },
     {
       path: "/user",
-      element: <CreateUser />,
+      element: (
+        <Page>
+          <UserForm />
+        </Page>
+      ),
     },
   ]);
 

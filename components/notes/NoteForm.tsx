@@ -12,35 +12,57 @@ import {
 } from "@mui/material";
 import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import React, { FC } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { createNote, editNote } from "../../api/note";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { Marker } from "react-leaflet";
 import { Stack } from "@mui/system";
-import { createNote } from "../../api/note";
 import { fishingMethodOptions } from "../../options/note";
 import { getUsers } from "../../api/user";
 import { useFormik } from "formik";
 import useMessage from "../../hooks/useMessage";
-import { useNavigate } from "react-router-dom";
 
-const NoteForm: FC = () => {
-  const fieldProps: TextFieldProps = {
-    fullWidth: true,
-    margin: "dense",
-  };
+const fieldProps: TextFieldProps = {
+  fullWidth: true,
+  margin: "dense",
+};
+
+const NoteForm: FC = (props) => {
+  const location = useLocation();
+  const { state } = location;
+  const { note } = state;
 
   const { showError, showMessage } = useMessage();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { mutate: addNote } = useMutation({
     mutationFn: createNote,
     onError: () => {
-      showError("Failed to create fishing note");
+      showError("Failed to create note");
     },
     onSuccess: () => {
       navigate("/");
-      showMessage("Fishing note created");
+      showMessage("Note created");
+      return queryClient.invalidateQueries({
+        queryKey: ["notes"],
+      });
+    },
+  });
+
+  const { mutate: putNote } = useMutation({
+    mutationFn: editNote,
+    onError: () => {
+      showError("Failed to edit note");
+    },
+    onSuccess: () => {
+      navigate("/");
+      showMessage("Note created");
+      return queryClient.invalidateQueries({
+        queryKey: ["notes"],
+      });
     },
   });
 
@@ -55,6 +77,7 @@ const NoteForm: FC = () => {
   const submitForm = async (values: any) => {
     {
       const body = {
+        ...(note?.id && { id: note.id }),
         user: values.user,
         startTime: values.startTime,
         endTime: values.endTime,
@@ -63,24 +86,51 @@ const NoteForm: FC = () => {
         fishingMethod: values.fishingMethod,
         fishCount: values.fishCount,
         bait: values.bait,
-        note: values.description,
+        description: values.description,
+        ...(values.temp && { temp: values.temp }),
+        ...(values.windKph && { windKph: values.windKph }),
+        ...(values.windDir && { windDir: values.windDir }),
+        ...(values.cloudPct && { cloudPct: values.cloudPct }),
+        ...(values.conditionText && { conditionText: values.conditionText }),
       };
-      addNote(body);
+
+      if (note?.id) {
+        putNote(body);
+      } else {
+        addNote(body);
+      }
     }
   };
 
   const formik = useFormik({
-    initialValues: {
-      user: "",
-      startTime: null,
-      endTime: null,
-      coordinates: { latitude: 54.6872, longitude: 25.2797 },
-      waterBody: "",
-      fishingMethod: "",
-      fishCount: "",
-      bait: "",
-      description: "",
-    },
+    initialValues: note
+      ? {
+          user: note.user,
+          startTime: note.startTime,
+          endTime: note.endTime,
+          coordinates: note.coordinates,
+          waterBody: note.waterBody,
+          fishingMethod: note.fishingMethod,
+          fishCount: note.fishCount,
+          bait: note.bait,
+          description: note.description,
+          temp: note.temp,
+          windKph: note.windKph,
+          windDir: note.windDir,
+          cloudPct: note.cloudPct,
+          conditionText: note.conditionText,
+        }
+      : {
+          user: "",
+          startTime: null,
+          endTime: null,
+          coordinates: { latitude: 54.6872, longitude: 25.2797 },
+          waterBody: "",
+          fishingMethod: "",
+          fishCount: "",
+          bait: "",
+          description: "",
+        },
     onSubmit: submitForm,
   });
 
@@ -112,6 +162,9 @@ const NoteForm: FC = () => {
           }}
           select
           required
+          SelectProps={{
+            value: formik.values.user,
+          }}
           {...fieldProps}
         >
           {users &&
@@ -200,13 +253,13 @@ const NoteForm: FC = () => {
           onChange={(e) => {
             formik.setFieldValue("fishingMethod", e.target.value);
           }}
+          SelectProps={{
+            value: formik.values.fishingMethod,
+          }}
           select
           required
           {...fieldProps}
         >
-          <MenuItem key={""} value={""}>
-            No Selected
-          </MenuItem>
           {fishingMethodOptions.map((option) => (
             <MenuItem key={option.id} value={option.id}>
               {option.label}
@@ -236,6 +289,53 @@ const NoteForm: FC = () => {
           multiline
           {...fieldProps}
         />
+        {note?.id && (
+          <>
+            <Typography fontWeight={700} sx={{ mt: 2 }}>
+              Weather
+            </Typography>
+            <TextField
+              id="temp"
+              label="Tempature"
+              value={formik.values.temp}
+              onChange={formik.handleChange}
+              multiline
+              {...fieldProps}
+            />
+            <TextField
+              id="windKph"
+              label="Wind speed"
+              value={formik.values.windKph}
+              onChange={formik.handleChange}
+              multiline
+              {...fieldProps}
+            />
+            <TextField
+              id="windDir"
+              label="Wind direction"
+              value={formik.values.windDir}
+              onChange={formik.handleChange}
+              multiline
+              {...fieldProps}
+            />
+            <TextField
+              id="cloudPct"
+              label="Cloud percent"
+              value={formik.values.cloudPct}
+              onChange={formik.handleChange}
+              multiline
+              {...fieldProps}
+            />
+            <TextField
+              id="conditionText"
+              label="Weather condition"
+              value={formik.values.conditionText}
+              onChange={formik.handleChange}
+              multiline
+              {...fieldProps}
+            />
+          </>
+        )}
         <Stack
           alignItems="flex-end"
           justifyContent="flex-end"

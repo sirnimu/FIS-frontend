@@ -11,7 +11,7 @@ export type Note = {
   fishingMethod: FishingMethod;
   fishCount: number;
   bait: string;
-  note: string;
+  description: string;
   temp: string;
   windKph: string;
   windDir: string;
@@ -22,10 +22,11 @@ export type Note = {
 export type Coordinates = { latitude: number; longitude: number };
 
 export enum FishingMethod {
-  None = "",
   Spinning = 1,
   Float,
   Bottom,
+  IceFishing,
+  Other,
 }
 
 export const getNotes = async (): Promise<Note[]> => {
@@ -34,4 +35,12 @@ export const getNotes = async (): Promise<Note[]> => {
 
 export const createNote = async (newNote: Partial<Note>): Promise<Note[]> => {
   return axios.post("/note", newNote);
+};
+
+export const editNote = async (updatedNote: Partial<Note>) => {
+  return axios.put("/note", updatedNote);
+};
+
+export const deleteNote = async (id: Note["id"]): Promise<Note[]> => {
+  return axios.delete("/note", { params: { id } });
 };
