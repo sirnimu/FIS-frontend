@@ -17,6 +17,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { DateTimePicker } from "@mui/x-date-pickers";
+import L from "leaflet";
 import { Marker } from "react-leaflet";
 import { Stack } from "@mui/system";
 import { fishingMethodOptions } from "../../options/note";
@@ -29,6 +30,12 @@ const fieldProps: TextFieldProps = {
   fullWidth: true,
   margin: "dense",
 };
+
+const icon = L.icon({
+  iconUrl: "/public/images/marker-icon.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
 
 const NoteForm: FC = () => {
   const location = useLocation();
@@ -139,7 +146,6 @@ const NoteForm: FC = () => {
     onSubmit: submitForm,
   });
 
-  console.log(formik.values.endTime);
   const MapEvents = () => {
     useMapEvents({
       click(e) {
@@ -228,6 +234,7 @@ const NoteForm: FC = () => {
                 formik.values.coordinates.latitude,
                 formik.values.coordinates.longitude,
               ]}
+              icon={icon}
             />
           </MapContainer>
           <Grid

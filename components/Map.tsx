@@ -1,9 +1,9 @@
 import "leaflet/dist/leaflet.css";
-import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import React, { FC } from "react";
 
+import L from "leaflet";
 import { LatLngExpression } from "leaflet";
 
 type Props = {
@@ -11,6 +11,12 @@ type Props = {
 };
 
 const Map: FC<Props> = ({ position }) => {
+  const icon = L.icon({
+    iconUrl: "/public/images/marker-icon.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+  });
+
   return (
     <MapContainer
       center={position}
@@ -21,7 +27,7 @@ const Map: FC<Props> = ({ position }) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={position} />
+      <Marker position={position} icon={icon} />
     </MapContainer>
   );
 };
