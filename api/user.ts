@@ -10,6 +10,6 @@ export const getUsers = async (): Promise<User[]> => {
   return axios.get("/user").then((res) => res.data);
 };
 
-export const createUser = async (newUser: User): Promise<User> => {
+export const createUser = async (newUser: Omit<User, "id">): Promise<User> => {
   return axios.post("/user", newUser);
 };

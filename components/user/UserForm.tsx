@@ -26,7 +26,7 @@ const UserForm = () => {
   const submitForm = async (values: any) => {
     {
       const body = {
-        username: values.username,
+        userName: values.userName,
         password: values.password,
       };
       createNewUser(body);
@@ -35,7 +35,7 @@ const UserForm = () => {
 
   const formik = useFormik({
     initialValues: {
-      username: "",
+      userName: "",
       password: "",
     },
     onSubmit: submitForm,
@@ -46,9 +46,9 @@ const UserForm = () => {
       <Card sx={{ p: 4 }}>
         <Stack direction="column" spacing={2}>
           <TextField
-            id="username"
+            id="userName"
             label="Username"
-            value={formik.values.username}
+            value={formik.values.userName}
             onChange={formik.handleChange}
           />
           <Button variant="contained" onClick={() => formik.handleSubmit()}>
