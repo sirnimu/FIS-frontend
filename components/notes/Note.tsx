@@ -96,6 +96,13 @@ const Note: FC<Props> = ({ note }) => {
         sx={{ "&.MuiCardHeader-root": { pb: 0 } }}
       />
       <CardContent>
+        {note.description && (
+          <Box sx={{ my: 2 }}>
+            <Typography fontWeight={700}>Description:</Typography>
+            <Typography>{note.description}</Typography>
+          </Box>
+        )}
+
         <Typography fontWeight={700}>General:</Typography>
         <Grid display="grid" gridTemplateColumns="1fr 1fr">
           <Typography>Fishes caught</Typography>
@@ -115,28 +122,41 @@ const Note: FC<Props> = ({ note }) => {
             </>
           )}
         </Grid>
-        {note.description && (
-          <Box sx={{ my: 2 }}>
-            <Typography fontWeight={700}>Description:</Typography>
-            <Typography>{note.description}</Typography>
-          </Box>
-        )}
-
         {note.temp && (
           <Box sx={{ mt: 2 }}>
             <Grid display="grid" gridTemplateColumns="1fr 1fr">
               <Typography fontWeight={700} gridColumn="span 2">
                 Weather:
               </Typography>
-              <Typography gridColumn="span 2">{note.conditionText}</Typography>
-              <Typography>Temperature</Typography>
-              <Typography> {`${note.temp}°C`}</Typography>
-              <Typography>Wind speed</Typography>
-              <Typography> {`${note.windKph} km/h`}</Typography>
-              <Typography>Wind direction</Typography>
-              <Typography>{note.windDir}</Typography>
-              <Typography>Cloudiness</Typography>
-              <Typography>{`${note.cloudPct}%`}</Typography>
+              {note.conditionText && (
+                <Typography gridColumn="span 2">
+                  {note.conditionText}
+                </Typography>
+              )}
+              {note.temp && (
+                <>
+                  <Typography>Temperature</Typography>
+                  <Typography> {`${note.temp}°C`}</Typography>
+                </>
+              )}
+              {note.windKph && (
+                <>
+                  <Typography>Wind speed</Typography>
+                  <Typography> {`${note.windKph} km/h`}</Typography>
+                </>
+              )}
+              {note.windDir && (
+                <>
+                  <Typography>Wind direction</Typography>
+                  <Typography>{note.windDir}</Typography>
+                </>
+              )}
+              {note.cloudPct && (
+                <>
+                  <Typography>Cloudiness</Typography>
+                  <Typography>{`${note.cloudPct}%`}</Typography>
+                </>
+              )}
             </Grid>
           </Box>
         )}
