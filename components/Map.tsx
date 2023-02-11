@@ -12,7 +12,7 @@ type Props = {
 
 const Map: FC<Props> = ({ position }) => {
   const icon = L.icon({
-    iconUrl: "/public/images/marker-icon.png",
+    iconUrl: "/images/marker-icon.png",
     iconSize: [25, 41],
     iconAnchor: [12, 41],
   });
