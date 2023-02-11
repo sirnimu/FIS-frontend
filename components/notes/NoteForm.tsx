@@ -21,6 +21,7 @@ import { Marker } from "react-leaflet";
 import { Stack } from "@mui/system";
 import { fishingMethodOptions } from "../../options/note";
 import { getUsers } from "../../api/user";
+import moment from "moment";
 import { useFormik } from "formik";
 import useMessage from "../../hooks/useMessage";
 
@@ -29,7 +30,7 @@ const fieldProps: TextFieldProps = {
   margin: "dense",
 };
 
-const NoteForm: FC = (props) => {
+const NoteForm: FC = () => {
   const location = useLocation();
   const { state } = location;
   const { note } = state;
@@ -55,11 +56,11 @@ const NoteForm: FC = (props) => {
   const { mutate: putNote } = useMutation({
     mutationFn: editNote,
     onError: () => {
-      showError("Failed to edit note");
+      showError("Failed update note");
     },
     onSuccess: () => {
       navigate("/");
-      showMessage("Note created");
+      showMessage("Note updated");
       return queryClient.invalidateQueries({
         queryKey: ["notes"],
       });
@@ -73,6 +74,10 @@ const NoteForm: FC = (props) => {
       showError("Failed to load");
     },
   });
+
+  const formatDate = (date) => {
+    return moment(date).format("YYYY-MM-DDTHH:mm:ss");
+  };
 
   const submitForm = async (values: any) => {
     {
@@ -134,6 +139,7 @@ const NoteForm: FC = (props) => {
     onSubmit: submitForm,
   });
 
+  console.log(formik.values.endTime);
   const MapEvents = () => {
     useMapEvents({
       click(e) {
@@ -169,8 +175,8 @@ const NoteForm: FC = (props) => {
         >
           {users &&
             users.map((user) => (
-              <MenuItem key={user} value={user}>
-                {user}
+              <MenuItem key={user.userName} value={user.userName}>
+                {user.userName}
               </MenuItem>
             ))}
         </TextField>
@@ -180,7 +186,7 @@ const NoteForm: FC = (props) => {
           ampm={false}
           value={formik.values.startTime}
           onChange={(newValue) => {
-            formik.setFieldValue("startTime", newValue);
+            formik.setFieldValue("startTime", formatDate(newValue));
           }}
           renderInput={(params) => (
             <TextField id="startTime" required {...fieldProps} {...params} />
@@ -191,10 +197,16 @@ const NoteForm: FC = (props) => {
           ampm={false}
           value={formik.values.endTime}
           onChange={(newValue) => {
-            formik.setFieldValue("endTime", newValue);
+            formik.setFieldValue("endTime", formatDate(newValue));
           }}
           renderInput={(params) => (
-            <TextField id="endTime" required {...fieldProps} {...params} />
+            <TextField
+              id="endTime"
+              onChange={formik.handleChange}
+              required
+              {...fieldProps}
+              {...params}
+            />
           )}
         />
         <Box sx={{ width: "100%", my: 2 }}>

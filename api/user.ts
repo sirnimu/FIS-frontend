@@ -1,11 +1,12 @@
 import axios from "./axios";
 
 export type User = {
-  username: string;
+  id: number;
+  userName: string;
   password: string;
 };
 
-export const getUsers = async (): Promise<string[]> => {
+export const getUsers = async (): Promise<User[]> => {
   return axios.get("/user").then((res) => res.data);
 };
 

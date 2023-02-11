@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { Note as NoteType, deleteNote } from "../../api/note";
 import React, { FC } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { AvatarGenerator } from "random-avatar-generator";
 import Map from "../Map";
@@ -22,7 +23,6 @@ import { fishingMethodOptions } from "../../options/note";
 import moment from "moment";
 import { red } from "@mui/material/colors";
 import useMessage from "../../hooks/useMessage";
-import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
@@ -33,6 +33,7 @@ const Note: FC<Props> = ({ note }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { showError, showMessage } = useMessage();
 
@@ -43,6 +44,9 @@ const Note: FC<Props> = ({ note }) => {
     },
     onSuccess: () => {
       showMessage("Note deleted");
+      return queryClient.invalidateQueries({
+        queryKey: ["notes"],
+      });
     },
   });
 
