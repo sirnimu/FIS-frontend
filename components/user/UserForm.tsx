@@ -1,4 +1,4 @@
-import { Button, Card, Stack, TextField, Typography } from "@mui/material";
+import { Button, Card, Stack, TextField } from "@mui/material";
 
 import { Container } from "@mui/system";
 import React from "react";
@@ -24,13 +24,11 @@ const UserForm = () => {
   });
 
   const submitForm = async (values: any) => {
-    {
-      const body = {
-        userName: values.userName,
-        password: values.password,
-      };
-      createNewUser(body);
-    }
+    const body = {
+      userName: values.userName,
+      password: values.password,
+    };
+    createNewUser(body);
   };
 
   const formik = useFormik({

@@ -1,16 +1,15 @@
 import {
   AppBar,
   Box,
+  Button,
   Container,
-  IconButton,
   Stack,
   Toolbar,
   Typography,
 } from "@mui/material";
 import { FC, ReactNode } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-import GroupAddIcon from "@mui/icons-material/GroupAdd";
-import { Link } from "react-router-dom";
 import PhishingIcon from "@mui/icons-material/Phishing";
 import React from "react";
 
@@ -19,6 +18,8 @@ type Props = {
 };
 
 const Page: FC<Props> = ({ children }) => {
+  const navigate = useNavigate();
+
   return (
     <Box
       component="main"
@@ -46,12 +47,30 @@ const Page: FC<Props> = ({ children }) => {
               </Stack>
             </Link>
             <Stack>
-              <Link to="/"></Link>
-              <Link to="/user">
-                <IconButton sx={{ color: "white" }}>
-                  <GroupAddIcon />
-                </IconButton>
-              </Link>
+              <Button
+                sx={{
+                  color: "white",
+                }}
+                onClick={() => navigate("/")}
+              >
+                Notes
+              </Button>
+              <Button
+                sx={{
+                  color: "white",
+                }}
+                onClick={() => navigate("/locations")}
+              >
+                Locations
+              </Button>
+              <Button
+                sx={{
+                  color: "white",
+                }}
+                onClick={() => navigate("/user")}
+              >
+                Users
+              </Button>
             </Stack>
           </Stack>
         </Toolbar>
