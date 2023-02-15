@@ -4,6 +4,7 @@ import {
 } from "react-router-dom";
 
 import { FC } from "react";
+import Locations from "../components/locations/Locations";
 import NoteForm from "../components/note/NoteForm";
 import Notes from "../components/note/Notes";
 import Page from "../components/Page";
@@ -33,6 +34,14 @@ const RouterProvider: FC = () => {
       element: (
         <Page>
           <UserForm />
+        </Page>
+      ),
+    },
+    {
+      path: "/locations",
+      element: (
+        <Page>
+          <Locations />
         </Page>
       ),
     },
