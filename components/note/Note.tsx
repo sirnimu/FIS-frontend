@@ -20,7 +20,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { fishingMethodOptions } from "../../options/note";
 import moment from "moment";
 import { red } from "@mui/material/colors";
-import useMessage from "../../hooks/useMessage";
+import useMessage from "../../utils/useMessage";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
@@ -64,7 +64,7 @@ const Note: FC<Props> = ({ note }) => {
   };
 
   const handleEditNote = () => {
-    navigate("note", { state: { note } });
+    navigate(`note/${note.id}`);
   };
 
   const getFishingMethodLabel = (fishingMethod: NoteType["fishingMethod"]) => {

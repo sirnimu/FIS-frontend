@@ -5,11 +5,12 @@ import {
 
 import { FC } from "react";
 import Locations from "../components/locations/Locations";
-import NoteForm from "../components/note/NoteForm";
+import NoteForm from "../components/note/form/NoteForm";
 import Notes from "../components/note/Notes";
 import Page from "../components/Page";
 import React from "react";
 import UserForm from "../components/user/UserForm";
+import { getNote } from "../api/note";
 
 const RouterProvider: FC = () => {
   const router = createBrowserRouter([
@@ -28,6 +29,16 @@ const RouterProvider: FC = () => {
           <NoteForm />
         </Page>
       ),
+      children: [
+        {
+          path: ":noteId",
+          element: (
+            <Page>
+              <NoteForm />
+            </Page>
+          ),
+        },
+      ],
     },
     {
       path: "/user",

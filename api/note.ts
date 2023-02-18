@@ -3,7 +3,6 @@ import axios from "./axios";
 export type Note = {
   id: number;
   user: string;
-  fishingDate: string;
   startTime: string;
   endTime: string;
   coordinates: Coordinates;
@@ -28,6 +27,10 @@ export enum FishingMethod {
   IceFishing,
   Other,
 }
+
+export const getNote = async (id: Note["id"]): Promise<Note> => {
+  return axios.get("/note", { params: { id } }).then((res) => res.data);
+};
 
 export const getNotes = async (): Promise<Note[]> => {
   return axios.get("/note").then((res) => res.data);

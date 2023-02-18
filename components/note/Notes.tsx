@@ -5,7 +5,7 @@ import { FC } from "react";
 import Note from "./Note";
 import React from "react";
 import { getNotes } from "../../api/note";
-import useMessage from "../../hooks/useMessage";
+import useMessage from "../../utils/useMessage";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 

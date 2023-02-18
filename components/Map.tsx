@@ -23,10 +23,7 @@ const Map: FC<Props> = ({ position }) => {
       zoom={13}
       style={{ height: 250, width: "100%" }}
     >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Marker position={position} icon={icon} />
     </MapContainer>
   );
