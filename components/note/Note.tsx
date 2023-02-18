@@ -140,7 +140,9 @@ const Note: FC<Props> = ({ note }) => {
               {note.windKph && (
                 <>
                   <Typography>Wind speed</Typography>
-                  <Typography> {`${note.windKph} km/h`}</Typography>
+                  <Typography>{`${Math.round(
+                    Number(note.windKph) / 3.6
+                  )} m/s`}</Typography>
                 </>
               )}
               {note.windDir && (
@@ -158,6 +160,25 @@ const Note: FC<Props> = ({ note }) => {
             </Grid>
           </Box>
         )}
+
+        {/* {note.temp && (
+          <Box sx={{ mt: 2 }}>
+            <Typography fontWeight={700} gridColumn="span 2">
+              Weather:
+            </Typography>
+            <Stack justifyContent="flex-start" spacing={1}>
+              <WbSunnyIcon fontSize="large" />
+              <Typography variant="h4"> {`${note.temp}°C`}</Typography>
+              <Stack direction="column" alignItems="flex-start">
+                <Typography variant="body2">
+                  {`Wind: ${note.windKph} km/h`}
+                </Typography>
+                <Typography variant="body2">{`Wind: ${note.windDir}`}</Typography>
+                <Typography variant="body2">{`Cloudiness:${note.cloudPct}%`}</Typography>
+              </Stack>
+            </Stack>
+          </Box>
+        )} */}
 
         {note.coordinates.latitude && note.coordinates.longitude && (
           <Box sx={{ mt: 2 }}>

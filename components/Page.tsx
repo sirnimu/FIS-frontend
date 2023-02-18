@@ -63,14 +63,6 @@ const Page: FC<Props> = ({ children }) => {
               >
                 Locations
               </Button>
-              <Button
-                sx={{
-                  color: "white",
-                }}
-                onClick={() => navigate("/user")}
-              >
-                Users
-              </Button>
             </Stack>
           </Stack>
         </Toolbar>
